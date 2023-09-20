@@ -90,9 +90,9 @@ def generate_launch_description():
             description='Specifying whether or not to enable angle_compensate of scan data'),
 
         Node(
-            package='rplidar_ros2',
+            package='rplidar_ros',
             executable='rplidar_node',
-            name='rplidar_scan_publisher',
+            name='rplidar_node',
             parameters=[{'serial_port': serial_port, 
                          'serial_baudrate': serial_baudrate, 
                          'frame_id': frame_id,
