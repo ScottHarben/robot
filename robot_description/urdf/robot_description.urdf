@@ -126,7 +126,7 @@
 
 <link name="laser">
   <visual>
-    <origin xyz="0 0 ${base_zoff}" rpy="0 0 ${pi}"/>
+    <origin xyz="0 0 ${base_zoff}" rpy="0 0 0"/>
     <geometry>
         <cylinder radius="${laser_diameter / 2}" length="${laser_height}"/>
     </geometry>
