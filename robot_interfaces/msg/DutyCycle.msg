@@ -1,0 +1,2 @@
+float64 duty_cycle_left
+float64 duty_cycle_right
