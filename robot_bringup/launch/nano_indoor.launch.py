@@ -1,10 +1,10 @@
 import os
-from ament_index_python.packages import get_package_share_directory
-from launch_ros.substitutions import FindPackageShare
 import launch
-from launch_ros.actions import Node
+from ament_index_python import get_package_share_directory
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 
 def generate_launch_description():
@@ -15,9 +15,54 @@ def generate_launch_description():
     frame_id = LaunchConfiguration('frame_id', default='laser')
     inverted = LaunchConfiguration('inverted', default='false')
     angle_compensate = LaunchConfiguration('angle_compensate', default='true')
+    
+    #robot description
+    default_model_path = os.path.join(get_package_share_directory("robot_description"),
+                                     'robot_description.urdf')
 
     return launch.LaunchDescription([
+
+        #imu
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('realsense2_camera'),
+                    'launch',
+                    'rs_launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'enable_accel': 'true',
+                'enable_gyro': 'true',
+                'unite_imu_method': '1'  
+                }.items()
+        ),
+
+        Node(
+            package='robot',
+            executable='imu_controller'),
         
+        Node(
+            package = "imu_filter_madgwick",
+            executable="imu_filter_madgwick_node",
+            name="imu_filter",
+            output="screen",
+            parameters=[os.path.join(
+                        get_package_share_directory('robot_bringup'),
+                        'config',
+                        'imu_filter_madgwick_params.yaml')]),
+
+        #robot localization
+        Node(
+            package = "robot_localization",
+            executable="ekf_node",
+            name="ekf_filter_node",
+            output="screen",
+            parameters=[os.path.join(
+                        get_package_share_directory('robot_bringup'),
+                        'config',
+                        'ekf_params.yaml')]),
+
         #lidar
         DeclareLaunchArgument(
             'serial_port',
@@ -54,6 +99,22 @@ def generate_launch_description():
                          'inverted': inverted, 
                          'angle_compensate': angle_compensate}],
             output='screen'),
+        
+        # robot description
+        DeclareLaunchArgument(
+            name='model', 
+            default_value=default_model_path,
+            description='Absolute path to robot urdf file'),
+
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            parameters=[{'robot_description': Command(['xacro ', LaunchConfiguration('model')])}]),
+
+        Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher'),
 
         #robot
         Node(

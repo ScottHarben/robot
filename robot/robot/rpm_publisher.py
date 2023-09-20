@@ -47,14 +47,9 @@ class RPMPublisher(Node):
             right_ticks_difference = 0 - (65535 - right_ticks_difference)
 
         delta_time = (self.time_current - self.time_previous).nanoseconds / 1e9 # time in seconds
-        #adjusted_rpm_time = 60.0 / delta_time # callback time may not be exactly 0.1 seconds
 
         left_wheel_rpm = (left_ticks_difference / (delta_time * self.ticks_per_revolution)) * 60.0
         right_wheel_rpm = (right_ticks_difference / (delta_time * self.ticks_per_revolution)) * 60.0
-        # angular_velocity_left = left_wheel_rpm * self.rpm_to_radians
-        # angular_velocity_right = right_wheel_rpm * self.rpm_to_radians
-        # linear_velocity_left = self.wheel_radius * angular_velocity_left
-        # inear_velocity_right = self.wheel_radius * angular_velocity_right
 
         self.left_ticks_previous = self.left_ticks_current
         self.right_ticks_previous = self.right_ticks_current

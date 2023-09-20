@@ -93,17 +93,17 @@ class OdomPublisher(Node):
         self.th += delta_th
         q = quaternion_from_euler(0, 0, self.th)
 
-        odom_transform = TransformStamped()
-        odom_transform.header.stamp = self.get_clock().now().to_msg()
-        odom_transform.header.frame_id = "odom"
-        odom_transform.child_frame_id = "base_link"
-        odom_transform.transform.translation.x = self.x
-        odom_transform.transform.translation.y = self.y
-        odom_transform.transform.translation.z = 0.0
-        odom_transform.transform.rotation.x = q[0]
-        odom_transform.transform.rotation.y = q[1]
-        odom_transform.transform.rotation.z = q[2]
-        odom_transform.transform.rotation.w = q[3]
+        # odom_transform = TransformStamped()
+        # odom_transform.header.stamp = self.get_clock().now().to_msg()
+        # odom_transform.header.frame_id = "odom"
+        # odom_transform.child_frame_id = "base_link"
+        # odom_transform.transform.translation.x = self.x
+        # odom_transform.transform.translation.y = self.y
+        # odom_transform.transform.translation.z = 0.0
+        # odom_transform.transform.rotation.x = q[0]
+        # odom_transform.transform.rotation.y = q[1]
+        # odom_transform.transform.rotation.z = q[2]
+        # odom_transform.transform.rotation.w = q[3]
         # self.tf_broadcaster.sendTransform(odom_transform)
 
         odom = Odometry()

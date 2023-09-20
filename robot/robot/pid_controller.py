@@ -49,37 +49,12 @@ class PidController(Node):
         pid_rpm_left = self.pid_left(self.feedback_rpm_left)
         pid_rpm_right = self.pid_right(self.feedback_rpm_right)
 
-        print("setpoint L {0} R {1} actual L {2} R {3}".format(round(msg.rpm_left, 2), round(msg.rpm_right, 2),round(pid_rpm_left, 2), round(pid_rpm_right, 2)))
+        #print("setpoint L {0} R {1} actual L {2} R {3}".format(round(msg.rpm_left, 2), round(msg.rpm_right, 2),round(pid_rpm_left, 2), round(pid_rpm_right, 2)))
         
         percentage_left = (pid_rpm_left / self.max_rpm) * 100.0
         percentage_right = (pid_rpm_right / self.max_rpm) * 100.0
         self.duty_cycle_left = interp(percentage_left, [-100, 100], [10.50, 19.50])
-        self.duty_cycle_right = interp(percentage_right, [-100, 100], [10.50, 19.50])
-
-        # OLD
-
-        # left_ratio = 0.0
-        # right_ratio = 0.0
-        # left_flipper = 1.0
-        # right_flipper = 1.0
-        # if target_rpm_left != 0.0:
-        #     left_ratio = abs(target_rpm_left) / abs(target_rpm_right)
-        #     left_flipper = target_rpm_left / abs(target_rpm_left)
-        # if target_rpm_right != 0.0:
-        #     right_ratio = 1.0 / left_ratio
-        #     right_flipper = target_rpm_right / abs(target_rpm_right)
-        # if abs(target_rpm_left) > self.max_rpm or abs(target_rpm_right) > self.max_rpm:
-        #     if left_ratio == 1.0:
-        #         target_rpm_left = self.max_rpm * left_flipper
-        #         target_rpm_right = self.max_rpm * right_flipper
-        #     elif abs(target_rpm_left) > abs(target_rpm_right):
-        #         target_rpm_left = self.max_rpm * left_flipper
-        #         target_rpm_right = abs(target_rpm_left) * right_ratio * right_flipper
-        #     else:
-        #         target_rpm_right = self.max_rpm * right_flipper
-        #         target_rpm_left = abs(target_rpm_right) * left_ratio * left_flipper
-
-        
+        self.duty_cycle_right = interp(percentage_right, [-100, 100], [10.50, 19.50])        
 
     def timer_callback(self):
         msg = DutyCycle()
