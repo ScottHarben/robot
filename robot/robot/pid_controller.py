@@ -30,29 +30,31 @@ class PidController(Node):
         self.duty_cycle_left = 0.0
         self.duty_cycle_right = 0.0
 
-        Kp = 0.1
-        Ki = 3.0
-        Kd = 0.0
-        output_limit = self.max_rpm # max mps to avoid runaway pid output
-        self.pid_left = PID(Kp, Ki, Kd, setpoint=0)
-        self.pid_left.output_limits = (0.0 - output_limit, output_limit)
-        self.pid_right = PID(Kp, Ki, Kd, setpoint=0)
-        self.pid_right.output_limits = (0.0 - output_limit, output_limit)
+        # Kp = 0.1
+        # Ki = 3.0
+        # Kd = 0.0
+        # output_limit = self.max_rpm # max mps to avoid runaway pid output
+        # self.pid_left = PID(Kp, Ki, Kd, setpoint=0)
+        # self.pid_left.output_limits = (0.0 - output_limit, output_limit)
+        # self.pid_right = PID(Kp, Ki, Kd, setpoint=0)
+        # self.pid_right.output_limits = (0.0 - output_limit, output_limit)
 
     def feedback_rpm_callback(self, msg):
         self.feedback_rpm_left = msg.rpm_left
         self.feedback_rpm_right = msg.rpm_right
 
     def target_rpm_callback(self, msg):
-        self.pid_left.setpoint = msg.rpm_left
-        self.pid_right.setpoint = msg.rpm_right
-        pid_rpm_left = self.pid_left(self.feedback_rpm_left)
-        pid_rpm_right = self.pid_right(self.feedback_rpm_right)
+        # self.pid_left.setpoint = msg.rpm_left
+        # self.pid_right.setpoint = msg.rpm_right
+        # pid_rpm_left = self.pid_left(self.feedback_rpm_left)
+        # pid_rpm_right = self.pid_right(self.feedback_rpm_right)
+        # percentage_left = (pid_rpm_left / self.max_rpm) * 100.0
+        # percentage_right = (pid_rpm_right / self.max_rpm) * 100.0
 
         #print("setpoint L {0} R {1} actual L {2} R {3}".format(round(msg.rpm_left, 2), round(msg.rpm_right, 2),round(pid_rpm_left, 2), round(pid_rpm_right, 2)))
         
-        percentage_left = (pid_rpm_left / self.max_rpm) * 100.0
-        percentage_right = (pid_rpm_right / self.max_rpm) * 100.0
+        percentage_left = (msg.rpm_left / self.max_rpm) * 100.0
+        percentage_right = (msg.rpm_right / self.max_rpm) * 100.0
         self.duty_cycle_left = interp(percentage_left, [-100, 100], [10.50, 19.50])
         self.duty_cycle_right = interp(percentage_right, [-100, 100], [10.50, 19.50])        
 
