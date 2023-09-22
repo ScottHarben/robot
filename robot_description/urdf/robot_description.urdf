@@ -24,7 +24,7 @@
 <xacro:property name="laser_height" value="0.09"/>
 <xacro:property name="laser_diameter" value="0.067"/>
 
-<!-- <link name="base_footprint"/> -->
+<link name="base_footprint"/>
 
 <link name="base_link">
   <visual>
@@ -38,11 +38,11 @@
   </visual>
 </link>
 
-<!-- <joint name="base_joint" type="fixed">
+<joint name="base_joint" type="fixed">
   <parent link="base_footprint"/>
   <child link="base_link"/>
   <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-</joint> -->
+</joint>
 
 <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
   <link name="${prefix}_link">
